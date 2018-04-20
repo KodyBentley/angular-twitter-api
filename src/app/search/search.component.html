@@ -1,0 +1,25 @@
+<div class="row search-row">
+  <div class="col-xs-8 col-lg-3 col-md-12 col-sm-3 offset-sm-6 offset-md-6 offset-lg-6 search-container">
+    <div class="search-inner">
+      <form name="inputForm" (ngSubmit)="getTweets(hash.value, event.value)" novalidate>
+        <div class="row">
+          <div class="col-lg-12 col-md-12 search-items">
+            <input #event placeholder="Event Name" value="Event" required minlength="4">
+          </div>
+          <div class="col-lg-12 col-md-12 search-items">
+            <input #hash placeholder="Hashtag" required minlength="4">
+          </div>
+          <div class="col-lg-12 col-md-12 search-items">
+            <button class="btn btn-primary event-btn" type="submit">Start Event</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="row error-row" *ngIf="formError">
+    <div class="col-lg-6 offset-lg-3 error-container">
+      <h3><i>{{formError}}</i></h3>
+    </div>
+  </div>
