@@ -22,13 +22,15 @@ export class HttpService {
    * @param hash String passed from form
    * @param cb Call back function to be triggered after initial post and get requests
    */
-  getData(hash: any, cb: Function): void {
-    const requestOptions = {
+  getData(hash: string, cb: Function): void {
+    const requestOptions: Object = {
       data: hash,
     };
-    this.http.post('http://localhost:3000/tweets', requestOptions).subscribe(data => {
-      this.http.get('http://localhost:3000/tweets').subscribe(data => {
-        cb(JSON.parse(data['_body']));
+    this.http.post('http://162.243.220.182/tweets', requestOptions).subscribe(data => {
+      this.http.get('http://162.243.220.182/tweets').subscribe(data => {
+        let tweets = JSON.parse(data['_body']);
+        let ordered = this.orderByTime(tweets);
+        cb(ordered);
       });
     })
   }
@@ -37,7 +39,7 @@ export class HttpService {
    * Function to get new data from api call from backend
    */
   updateTweets() {
-    return this.http.get('http://localhost:3000/tweets').map((res: Response, err) => res.json())
+    return this.http.get('http://162.243.220.182/tweets').map((res: Response, err) => res.json())
   }
 
   /**
@@ -53,6 +55,18 @@ export class HttpService {
    */
   getNewData() {
     return this.data;
+  }
+
+  orderByTime(tweets) {
+    for(let i of tweets) {
+      i.unix = new Date(i.created_at);
+    }
+
+    let ordered = tweets.sort((a, b) => {
+      return b.unix - a.unix;
+    });
+
+    return ordered;
   }
 
 }

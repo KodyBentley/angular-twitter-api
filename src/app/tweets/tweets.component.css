@@ -10,7 +10,9 @@
   .tweet {
     text-align: center;
     padding: 2%;
-    padding-bottom: 2rem;
+    padding-bottom: 2%;
+    /* padding-right: 0.5rem;
+    padding-left: 0.5rem; */
   }
   
   .picture {

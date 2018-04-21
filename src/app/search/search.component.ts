@@ -48,7 +48,6 @@ export class SearchComponent {
        * Call get data function from our http service
        */
       this.http.getData(hash, (data) => {
-        console.log('inside search', data);
           this.data = data;
           let arr = [];
           arr.push(data, event, hash);

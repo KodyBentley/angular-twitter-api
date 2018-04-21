@@ -21,6 +21,8 @@ export class GalleryComponent {
   event: string;
   tweets: Array<any> = [];
   users: number;
+  loopInit: boolean = false;
+  timer: any;
   constructor(private service: HttpService, private router: Router, private search: SearchComponent) {
     /**
      * Set up our gallery variables with appropriate values
@@ -37,22 +39,31 @@ export class GalleryComponent {
     /**
      * Interval function to get new data every 20 seconds
      */
-    setInterval(() => {
+    this.timer = setInterval(() => {
       this.service.updateTweets().subscribe(data => {
-        console.log('inside interval', data);
-        // this.data = data;
-        // let arr = [];
-        // arr.push(data, this.hash, this.event);
-        // this.service.setData(arr);
-        // this.data = this.service.getNewData();
         for (let i of data) {
           if (!this.exists(i, this.tweets, 'idStr', 'id_str')) {
-            this.tweets.splice(0, 0, { imgSrc: i.entities.media[0].media_url, profileImg: i.user.profile_image_url, screenName: i.user.screen_name, createdAt: i.created_at, idStr: i.id_str });
+            if (this.loopInit === false) {
+              this.tweets.push({ imgSrc: i.entities.media[0].media_url, profileImg: i.user.profile_image_url, screenName: i.user.screen_name, createdAt: i.created_at, idStr: i.id_str });
+            } else {
+              this.tweets.unshift({ imgSrc: i.entities.media[0].media_url, profileImg: i.user.profile_image_url, screenName: i.user.screen_name, createdAt: i.created_at, idStr: i.id_str });
+            }
           }
         }
+        this.loopInit = true;
         this.countUsers();
       });
     }, 1000)
+  }
+
+  /**
+   * Angular on destroy function for component
+   */
+  ngOnDestroy() {
+    /**
+     * Clear setinterval on component when back button is pressed to enter new hash
+     */
+    clearInterval(this.timer);
   }
 
   /**
